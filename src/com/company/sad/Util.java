@@ -14,9 +14,9 @@ public class Util {
             if (file.isFile()) {
                 String extension = FilenameUtils.getExtension(file.getName());
                 if (extension.equals("class")) {
-                    decompile(file, source.getAbsolutePath(), dest.getAbsolutePath());
+                    decompile(file);
                 } else {
-                    copy(file, source.getAbsolutePath(), dest.getAbsolutePath());
+                    copy(file);
                 }
             }
 
@@ -44,7 +44,7 @@ public class Util {
         }
     }
 
-    public void decompile(File file, String sourceRoot, String destRoot) {
+    public void decompile(File file) {
         System.out.println(String.format("Decompile file - %s", file.getName()));
         try {
             String className = file.getName().replaceAll(".class", "");
@@ -55,7 +55,7 @@ public class Util {
             command[3] = file.getAbsolutePath().replace(file.getName(), "");
             command[4] = className;
             command[5] = ">";
-            command[6] = file.getAbsolutePath().replace(sourceRoot, destRoot).replace(".class", ".scala");
+            command[6] = file.getAbsolutePath().replace(Main.SOURCE_ROOT, Main.DEST_ROOT).replace(".class", ".scala");
             ProcessBuilder prc = new ProcessBuilder(command);
             Process p = prc.start();
             readData(p);
@@ -64,7 +64,7 @@ public class Util {
         }
     }
 
-    public void copy(File file, String sourceRoot, String destRoot) {
+    public void copy(File file) {
         System.out.println(String.format("Copy file - %s", file.getName()));
         try {
             String[] command = new String[5];
@@ -72,7 +72,7 @@ public class Util {
             command[1] = "/c";
             command[2] = "copy";
             command[3] = file.getAbsolutePath();
-            command[4] = file.getAbsolutePath().replace(sourceRoot, destRoot);
+            command[4] = file.getAbsolutePath().replace(Main.SOURCE_ROOT, Main.DEST_ROOT);
             ProcessBuilder prc = new ProcessBuilder(command);
             Process p = prc.start();
             readData(p);
